@@ -21,10 +21,10 @@ struct Card {
     var isMatched = false
     var identifier: Int
     
-    static var identifierFactory = 0
+    private static var identifierFactory = 0
     
     // static metodi esterni alla classe globali, non fanno parte di Card ma del tipo Card
-    static func getUnicIdentifier() -> Int {
+    private static func getUnicIdentifier() -> Int {
         identifierFactory += 1
         return identifierFactory
     }
