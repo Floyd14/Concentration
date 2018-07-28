@@ -19,12 +19,26 @@ class ViewController: UIViewController {
     
     private(set) var flipCount = 0 {
         didSet {
-            flipsLabel.text = "Flips: \(flipCount)"
+          updateAttributedTextOfTheLabel()
         }
     }
     
+    private func updateAttributedTextOfTheLabel() {
+        let attributes: [NSAttributedStringKey: Any] = [
+            .strokeWidth: 5.0,
+            .strokeColor: #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+        ]
+        let attributedString = NSAttributedString(string: "Flips: \(flipCount)", attributes: attributes)
+        flipsLabel.attributedText = attributedString
+    }
+    
     // ! mi permette di non iniziializzare
-    @IBOutlet private weak var flipsLabel: UILabel!
+    @IBOutlet private weak var flipsLabel: UILabel! {
+        didSet {
+            updateAttributedTextOfTheLabel()
+        }
+    }
+    
     @IBOutlet private var cardButtons: [UIButton]!
     
     @IBAction private func touchCard(_ sender: UIButton) {
@@ -50,9 +64,12 @@ class ViewController: UIViewController {
         }
     }
     
-    private var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎"]
-    private var emoji = [Int:String]()  //Dictionary<Int,String> ()
+    //private var emojiChoices = ["🦇", "😱", "🙀", "😈", "🎃", "👻", "🍭", "🍬", "🍎"] sotituisco con una String
+    private var emojiChoices = "🦇😱🙀😈🎃👻🍭🍬🍎"
     
+    // private var emoji = [Int:String]()  //Dictionary<Int,String> () sostituisco con: implemento il protocollo
+    private var emoji = [Card:String]()  //Dictionary<Int,String> ()
+
     private func emoji(for card: Card) -> String {
         //        if let chosenEmoji = emoji[card.identifier] {
         //            return chosenEmoji
@@ -65,13 +82,13 @@ class ViewController: UIViewController {
         //        } else {
         //            return "?"
         //        }
-        if emoji[card.identifier] == nil {
+        if emoji[card] == nil {
             if emojiChoices.count > 0 {
-                let randomIndex = emojiChoices.count.randomInt
-                emoji[card.identifier] = emojiChoices.remove(at: randomIndex) //emojiChoises[randomIndex]
+                let randomIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: emojiChoices.count.randomInt)
+                emoji[card] = String(emojiChoices.remove(at: randomIndex)) //emojiChoises[randomIndex]
             }
         }
-        return emoji[card.identifier] ?? "?"
+        return emoji[card] ?? "?"
     }
     
     //    private func flipCard(withEmoji emoji:String, on button:UIButton) {
